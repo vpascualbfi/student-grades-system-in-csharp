@@ -4,19 +4,22 @@
     {
         static void Main(string[] args)
         {
+
+            // get total number of students from user
             int totalStudents;
-            int choice = 0;
-
             Console.Write("Enter total students: ");
-
+            
             while (!int.TryParse(Console.ReadLine(), out totalStudents) || totalStudents < 1)
             {
-                Console.WriteLine("Invalid input. Please enter a valid number.");
+                Console.WriteLine("Invalid input. Please enter a valid number of students.");
                 Console.Write("\nEnter total students: ");
             }
 
+            // array to store student data
             Student[] students = new Student[totalStudents];
 
+            // loop for user interaction
+            int choice = 0;
             while (choice != 5)
             {
                 Console.WriteLine("\nWelcome to the Student Grades System!");
@@ -25,7 +28,7 @@
                 Console.Write("\nEnter choice: ");
                 while (!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 5)
                 {
-                    Console.WriteLine("Invalid Input. Please enter a valid number.");
+                    Console.WriteLine("Invalid Input. Please enter a valid number (1-5).");
                     Console.Write("\nEnter choice: ");
                 }
 
@@ -53,10 +56,12 @@
             {
                 for (int i = 0; i < students.Length; i++)
                 {
+                    // get student name from user
                     Console.Write($"\nEnter student name: ");
                     string name = Console.ReadLine();
-                    students[i] = new Student { name = name };
+                    students[i] = new Student { Name = name };
 
+                    // ask user if they want to enroll another student
                     if (i < students.Length - 1)
                     {
                         Console.Write("Enter Again [Y/N]: ");
@@ -67,47 +72,44 @@
                 }
             }
 
+            // Enter
             static void EnterStudentGrades(Student[] students)
             {
                 for (int i = 0; i < students.Length; i++)
                 {
+                    // check if student is null
                     if (students[i] == null)
                     {
                         break;
                     }
 
-                    Console.WriteLine($"\nStudent: {students[i].name}");
+                    Console.WriteLine($"\nStudent: {students[i].Name}");
 
-                    // Science Grade
+                    // get and validate science grade
                     double scienceGrade;
-                    Console.Write("Enter grade for Science: ");
-                    while (!double.TryParse(Console.ReadLine(), out scienceGrade) || scienceGrade < 0 || scienceGrade > 100)
+                    do
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid grade.\n");
                         Console.Write("Enter grade for Science: ");
-                    }
-                    students[i].scienceGrade = scienceGrade;
+                    } while (!double.TryParse(Console.ReadLine(), out scienceGrade) || scienceGrade < 0 || scienceGrade > 100);
+                    students[i].ScienceGrade = scienceGrade;
 
-                    // Math Grade
+                    // get and validate math grade
                     double mathGrade;
-                    Console.Write("Enter grade for Math: ");
-                    while (!double.TryParse(Console.ReadLine(), out mathGrade) || mathGrade < 0 || mathGrade > 100)
+                    do
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid grade.\n");
                         Console.Write("Enter grade for Math: ");
-                    }
-                    students[i].mathGrade = mathGrade;
+                    } while (!double.TryParse(Console.ReadLine(), out mathGrade) || mathGrade < 0 || mathGrade > 100);
+                    students[i].MathGrade = mathGrade;
 
-                    // English Grade
+                    // get and validate english grade
                     double englishGrade;
-                    Console.Write("Enter grade for English: ");
-                    while (!double.TryParse(Console.ReadLine(), out englishGrade) || englishGrade < 0 || englishGrade > 100)
+                    do
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid grade.\n");
                         Console.Write("Enter grade for English: ");
-                    }
-                    students[i].englishGrade = englishGrade;
+                    } while (!double.TryParse(Console.ReadLine(), out englishGrade) || englishGrade < 0 || englishGrade > 100);
+                    students[i].EnglishGrade = englishGrade;
 
+                    // ask user if they want to enter grades for another student
                     Console.Write("Enter Again [Y/N]: ");
                     string choice = Console.ReadLine().ToUpper();
                     if (choice != "Y")
@@ -119,9 +121,13 @@
             {
                 Console.WriteLine("\nStudent Grades");
                 Console.WriteLine("Name\t\tScience\tMath\tEnglish\tAve.");
-                foreach (Student student in students)
+                for (int i = 0; i < students.Length; i++)
                 {
-                    Console.WriteLine($"{student.name}\t\t{student.scienceGrade}\t{student.mathGrade}\t{student.englishGrade}\t{student.GetAverage()}");
+                    // check if student is not null
+                    if (students[i] != null)
+                    {
+                        Console.WriteLine($"{students[i].Name}\t\t{students[i].ScienceGrade}\t{students[i].MathGrade}\t{students[i].EnglishGrade}\t{students[i].GetAverage()}");
+                    }
                 }
             }
 
@@ -130,13 +136,17 @@
                 double highestAverage = 0;
                 string topStudent = "";
 
-                foreach (Student student in students)
+                for (int i = 0; i < students.Length; i++)
                 {
-                    double avg = student.GetAverage();
-                    if (avg > highestAverage)
+                    // check if student is not null
+                    if (students[i] != null)
                     {
-                        highestAverage = avg;
-                        topStudent = student.name;
+                        double avg = students[i].GetAverage();
+                        if (avg > highestAverage)
+                        {
+                            highestAverage = avg;
+                            topStudent = students[i].Name;
+                        }
                     }
                 }
 
@@ -146,16 +156,23 @@
 
         class Student
         {
-            public string name { get; set; }
-            public double scienceGrade { get; set; }
-            public double mathGrade { get; set; }
-            public double englishGrade { get; set; }
+            // property for student name
+            public string Name { get; set; }
+            
+            // property for science grade
+            public double ScienceGrade { get; set; }
 
+            // property for math grade
+            public double MathGrade { get; set; }
+            
+            // property for english grade
+            public double EnglishGrade { get; set; }
+
+            // method to calculate student's average grade
             public double GetAverage()
             {
-                return (scienceGrade + mathGrade + englishGrade) / 3;
+                return (ScienceGrade + MathGrade + EnglishGrade) / 3;
             }
         }
-
     }
 }
